@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const farmerSchema = new mongoose.Schema(
   {
+    farmerCode: {
+      type: String,
+      unique: true,
+      sparse: true, // prevents duplicate null errors
+    },
+
     memberNo: {
       type: String,
       required: true,
@@ -87,5 +93,26 @@ const farmerSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// 🔥 AUTO-GENERATE FARMER CODE 
+farmerSchema.pre("save", async function (next) {
+  if (this.farmerCode) return next();
+
+  const lastFarmer = await mongoose
+    .model("Farmer")
+    .findOne({ farmerCode: { $ne: null } })
+    .sort({ _id: -1 });
+
+  let newCode = 1;
+
+  if (lastFarmer?.farmerCode) {
+    const num = parseInt(lastFarmer.farmerCode.replace("F", ""));
+    newCode = num + 1;
+  }
+
+  this.farmerCode = "F" + newCode.toString().padStart(4, "0");
+
+  next();
+});
 
 export const Farmer = mongoose.model("Farmer", farmerSchema);

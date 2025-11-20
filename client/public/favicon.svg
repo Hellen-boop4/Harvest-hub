@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="15" fill="#16a34a" opacity="0.1" stroke="#16a34a" stroke-width="1"/>
+  
+  <!-- Leaf 1 (top left) -->
+  <path d="M 12 10 Q 10 14 11 18 Q 12 15 14 12 Z" fill="#16a34a"/>
+  
+  <!-- Leaf 2 (top right) -->
+  <path d="M 20 10 Q 22 14 21 18 Q 20 15 18 12 Z" fill="#22c55e"/>
+  
+  <!-- Center stem/grain -->
+  <line x1="16" y1="8" x2="16" y2="24" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Leaf 3 (bottom left) -->
+  <path d="M 12 20 Q 10 18 11 14 Q 12 17 14 20 Z" fill="#16a34a"/>
+  
+  <!-- Leaf 4 (bottom right) -->
+  <path d="M 20 20 Q 22 18 21 14 Q 20 17 18 20 Z" fill="#22c55e"/>
+  
+  <!-- Grain head at top -->
+  <circle cx="16" cy="6" r="2" fill="#16a34a"/>
+</svg>

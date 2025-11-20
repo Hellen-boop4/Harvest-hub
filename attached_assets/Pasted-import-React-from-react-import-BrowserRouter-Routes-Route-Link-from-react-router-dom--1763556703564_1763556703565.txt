@@ -1,0 +1,101 @@
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
+import Home from "./Home.jsx";
+import Finance from "./finance/Dashboard.jsx";
+import Farmers from "./farmers/Dashboard.jsx";
+import FullRegistration from "./farmers/farmerregistration.jsx";
+import Loans from "./loans/Dashboard.jsx";
+import Milk from "./milk/MilkCollection.jsx"
+import FarmersList from "./farmers/FarmersList.jsx";
+import FarmerProfile from "./farmers/farmerProfile.jsx";
+
+
+import "../index.css";
+
+function Nav() {
+  return (
+    <nav className="fixed top-0 left-0 w-full bg-green-700 text-white shadow-md z-50">
+      <div className="nav-container max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
+        <h1 className="text-2xl font-bold">Harvest Hub</h1>
+
+        <ul className="flex items-center gap-6">
+          <li>
+            <Link to="/" className="hover:text-green-300 transition">
+              Home
+            </Link>
+          </li>
+
+          {/* FARMERS DROPDOWN */}
+          <li className="relative group">
+            <button className="hover:text-green-300 transition flex items-center gap-1">
+              Farmers Mgt
+              <span>▾</span>
+            </button>
+
+            <ul className="absolute left-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:visible group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200">
+              <li>
+                <Link
+                  to="/farmers/register"
+                  className="block px-4 py-2 hover:bg-green-100"
+                >
+                  Farmer Registration
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  to="/farmers/list"
+                  className="block px-4 py-2 hover:bg-green-100"
+                >
+                  Farmers List
+                </Link>
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <Link to="/milk" className="hover:text-green-300 transition">
+              Milk Mgt
+            </Link>
+          </li>
+          <li>
+            <Link to="/loans" className="hover:text-green-300 transition">
+              Loan Mgmt
+            </Link>
+          </li>
+          <li>
+            <Link to="/finance" className="hover:text-green-300 transition">
+              Finance
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Nav />
+
+      <div className="pt-28 px-6">
+        <Routes>
+          <Route path="/" element={<Home />} />
+
+          {/* FARMERS MODULE */}
+          <Route path="/farmers" element={<Farmers />} />
+          <Route path="/farmers/register" element={<FullRegistration />} />
+          <Route path="/farmers/profile/:id" element={<FarmerProfile />} />
+          <Route path="/farmers/list" element={<FarmersList />} />
+
+          {/* OTHER MODULES */}
+          <Route path="/finance" element={<Finance />} />
+          <Route path="/loans" element={<Loans />} />
+          <Route path="/milk" element={<Milk />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+}

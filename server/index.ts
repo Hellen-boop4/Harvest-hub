@@ -3,6 +3,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes, setUseInMemoryAuth } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { connectDB } from "./db";
+import bcrypt from "bcryptjs";
+import { User } from "./models/User";
 
 
 const app = express();
@@ -18,17 +20,17 @@ app.use(express.json({
   }
 }));
 app.use(express.urlencoded({ extended: false }));
-@@// Add CORS headers to handle development requests
-@@app.use((req, res, next) => {
-  @@res.header("Access-Control-Allow-Origin", "*");
-  @@res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  @@res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  @@  if (req.method === "OPTIONS") {
-    @@res.sendStatus(200);
-    @@  } else {
-    @@next();
-    @@  }
-  @@});
+// Add CORS headers to handle development requests
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -65,6 +67,26 @@ app.use((req, res, next) => {
   try {
     await connectDB();
     log("✓ MongoDB connected");
+    // Optionally seed a default admin user when explicitly enabled.
+    // To enable: set environment variable `SEED_DEFAULT_ADMIN=true` before starting.
+    if (process.env.SEED_DEFAULT_ADMIN === "true") {
+      try {
+        const existingAdmin = await User.findOne({ username: "admin" });
+        if (!existingAdmin) {
+          const salt = await bcrypt.genSalt(8);
+          const passwordHash = await bcrypt.hash("admin", salt);
+          const newUser = new User({ username: "admin", passwordHash, role: "admin" });
+          await newUser.save();
+          log("✓ Seeded default admin user (username: admin, password: admin)");
+        } else {
+          log("Default admin user already exists");
+        }
+      } catch (seedErr: any) {
+        log(`⚠ Failed to seed admin user: ${seedErr?.message || seedErr}`);
+      }
+    } else {
+      log("(seeding disabled) Set SEED_DEFAULT_ADMIN=true to create default admin user on startup");
+    }
   } catch (error: any) {
     log(`✗ MongoDB connection failed: ${error.message}`);
     log("⚠ Using in-memory auth storage for testing. Farmer persistence will not work.");

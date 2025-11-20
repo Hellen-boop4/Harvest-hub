@@ -73,12 +73,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log("[Auth] Login response status:", res.status);
 
       if (!res.ok) {
-        const body = await res.json().catch(() => {
-          console.error("[Auth] Failed to parse error response");
-          return {};
-        });
-        console.error("[Auth] Login error:", body);
-        return { success: false, error: body.error || "Login failed" };
+        // Try to parse error response as JSON, but fall back to text when necessary
+        let body: any = null;
+        const contentType = res.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          body = await res.json().catch(() => null);
+        } else {
+          const text = await res.text().catch(() => null);
+          if (text) {
+            try {
+              body = JSON.parse(text);
+            } catch {
+              body = { raw: text };
+            }
+          }
+        }
+
+        console.error("[Auth] Login error body:", body);
+        const errMsg = (body && (body.error || body.message)) || `Login failed (${res.status})`;
+        return { success: false, error: errMsg };
       }
 
       const data = await res.json();
@@ -158,24 +171,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         login,
         register,
         logout,
-        const text = await res.text();
-        console.log("[Auth] Raw response body length:", text.length);
-        if(text.length < 500) {
-                console.log("[Auth] Raw response body:", text);
-} else {
-  console.log("[Auth] Raw response body preview:", text.substring(0, 200));
-              }
-
-let data;
-try {
-  data = JSON.parse(text);
-} catch (parseErr) {
-  console.error("[Auth] JSON parse error:", parseErr);
-  console.error("[Auth] Response was not valid JSON, first 300 chars:", text.substring(0, 300));
-  return { success: false, error: "Server returned invalid response" };
-}
+      }}
     >
-  { children }
-    </AuthContext.Provider >
+      {children}
+    </AuthContext.Provider>
   );
 };

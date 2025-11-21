@@ -23,17 +23,12 @@ const defaultFormData = {
   idNumber: "",
   age: "",
   kraPIN: "",
+  Route: " ",
   gender: "Male",
   maritalStatus: "Single",
-  employerName: "",
-  termsOfEmployment: "Permanent",
-  payrollStaffNo: "",
-  checkoffStation: "",
   memberCategory: "Member",
-  memberClass: "",
   capturedBy: "",
   status: "Open",
-  costCenter: "Other",
   locality: "Local",
   postCode: "",
   poBox: "",
@@ -47,7 +42,6 @@ const defaultFormData = {
   workEmail: "",
   county: "",
   residential: "",
-  alienExpiryDate: "",
   dob: "",
 };
 
@@ -98,7 +92,6 @@ export default function FullRegistration() {
           phone: formData.mobilePhone,
           email: formData.personalEmail,
           idNumber: formData.idNumber,
-          idType: formData.idType,
           city: formData.city,
           county: formData.county,
           address: formData.physicalAddress,
@@ -106,8 +99,6 @@ export default function FullRegistration() {
           gender: formData.gender,
           maritalStatus: formData.maritalStatus,
           kraPIN: formData.kraPIN,
-          employerName: formData.employerName,
-          payrollStaffNo: formData.payrollStaffNo,
           memberCategory: formData.memberCategory,
           status: "active",
         }),
@@ -124,7 +115,7 @@ export default function FullRegistration() {
         throw new Error(errMsg);
       }
 
-      // Optionally read returned farmer object
+      
       try {
         await response.json();
       } catch (_e) {
@@ -238,12 +229,7 @@ export default function FullRegistration() {
                 <TabsTrigger value="approval" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-white">
                   Approval Requests
                 </TabsTrigger>
-                <TabsTrigger value="create" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-white">
-                  Create
-                </TabsTrigger>
-                <TabsTrigger value="other" className="rounded-none border-b-2 border-transparent data-[state=active]:border-blue-600 data-[state=active]:bg-white">
-                  Other Options
-                </TabsTrigger>
+                
               </TabsList>
 
               {/* Report Tab Content */}
@@ -278,10 +264,6 @@ export default function FullRegistration() {
                     </div>
 
                     <div className="grid grid-cols-4 gap-4 mb-6">
-                      <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Alien / Passport Expiry Date</Label>
-                        <Input type="date" value={formData.alienExpiryDate} onChange={(e) => handleInputChange("alienExpiryDate", e.target.value)} />
-                      </div>
                       <div className="space-y-2">
                         <Label className="text-xs text-gray-600">Date of Birth</Label>
                         <Input value={formData.dob} onChange={(e) => handleInputChange("dob", e.target.value)} />
@@ -329,42 +311,18 @@ export default function FullRegistration() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="National ID">National ID</SelectItem>
+                            <SelectItem value="National ID">Passport No.</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">ID No.</Label>
+                        <Label className="text-xs text-gray-600">ID No./Passport No</Label>
                         <Input value={formData.idNumber} onChange={(e) => handleInputChange("idNumber", e.target.value)} />
                       </div>
                     </div>
 
                     {/* Employment Section on Same Row */}
-                    <div className="grid grid-cols-4 gap-4 mb-6">
-                      <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Employer Name</Label>
-                        <Input value={formData.employerName} onChange={(e) => handleInputChange("employerName", e.target.value)} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Terms of Employment</Label>
-                        <Select value={formData.termsOfEmployment} onValueChange={(value) => handleSelectChange("termsOfEmployment", value)}>
-                          <SelectTrigger className="h-9 text-sm">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Permanent">Permanent</SelectItem>
-                            <SelectItem value="Contract">Contract</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Payroll/Staff No.</Label>
-                        <Input value={formData.payrollStaffNo} onChange={(e) => handleInputChange("payrollStaffNo", e.target.value)} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Checkoff Station</Label>
-                        <Input value={formData.checkoffStation} onChange={(e) => handleInputChange("checkoffStation", e.target.value)} />
-                      </div>
-                    </div>
+                  
 
                     <div className="grid grid-cols-4 gap-4 mb-6">
                       <div className="space-y-2">
@@ -374,15 +332,13 @@ export default function FullRegistration() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Member">Member</SelectItem>
-                            <SelectItem value="Farmer">Farmer</SelectItem>
+                            <SelectItem value="Member">Farmer</SelectItem>
+                            <SelectItem value="Farmer">Porter</SelectItem>
+                            <SelectItem value="Farmer">Staff</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Member Class</Label>
-                        <Input value={formData.memberClass} onChange={(e) => handleInputChange("memberClass", e.target.value)} />
-                      </div>
+              
                       <div className="space-y-2">
                         <Label className="text-xs text-gray-600">Captured By</Label>
                         <Input value={formData.capturedBy} onChange={(e) => handleInputChange("capturedBy", e.target.value)} />
@@ -394,8 +350,8 @@ export default function FullRegistration() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Open">Open</SelectItem>
-                            <SelectItem value="Closed">Closed</SelectItem>
+                            <SelectItem value="Open">Active</SelectItem>
+                            <SelectItem value="Closed">Dormant</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -403,29 +359,18 @@ export default function FullRegistration() {
 
                     <div className="grid grid-cols-4 gap-4 mb-6">
                       <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Cost Center</Label>
-                        <Select value={formData.costCenter} onValueChange={(value) => handleSelectChange("costCenter", value)}>
+                        <Label className="text-xs text-gray-600">Route</Label>
+                        <Select value={formData.Route} onValueChange={(value) => handleSelectChange("costCenter", value)}>
                           <SelectTrigger className="h-9 text-sm">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Other">Other</SelectItem>
-                            <SelectItem value="Main">Main</SelectItem>
+                            <SelectItem value="Other">Route 1</SelectItem>
+                            <SelectItem value="Main">Route 2</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-2">
-                        <Label className="text-xs text-gray-600">Locality</Label>
-                        <Select value={formData.locality} onValueChange={(value) => handleSelectChange("locality", value)}>
-                          <SelectTrigger className="h-9 text-sm">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Local">Local</SelectItem>
-                            <SelectItem value="International">International</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                     
                       <div className="col-span-2"></div>
                     </div>
                   </div>
@@ -488,10 +433,7 @@ export default function FullRegistration() {
                             <Label className="text-xs text-gray-600">Personal Email</Label>
                             <Input type="email" value={formData.personalEmail} onChange={(e) => handleInputChange("personalEmail", e.target.value)} />
                           </div>
-                          <div className="space-y-2">
-                            <Label className="text-xs text-gray-600">Work Email</Label>
-                            <Input type="email" value={formData.workEmail} onChange={(e) => handleInputChange("workEmail", e.target.value)} />
-                          </div>
+                          
                         </div>
                       </div>
                     </div>

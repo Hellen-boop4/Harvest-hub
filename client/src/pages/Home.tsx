@@ -63,7 +63,7 @@ export default function Home() {
             Welcome to Harvest Hub
           </h1>
           <p className="text-muted-foreground">
-            Your complete agricultural management system
+            Your agricultural management system
           </p>
         </div>
 
